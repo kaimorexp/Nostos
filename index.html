@@ -359,7 +359,8 @@ if(!S.cfg||!S.cfg.tasks)S.cfg={theme:"#4cc9ff",tabs:[1,2,3,0],tasks:JSON.parse(J
 var Q=S.cfg.tasks;S.mt=S.mt||[];S.pc=S.pc||{};S.goals=S.goals||[];S.xpb=S.xpb||0;
 if(S.gset===false){S.g1n=S.g1n||"MY BIG GOAL";S.g1t=S.g1t||1000}else{S.g1n=S.g1n||"50K IN 2019 EC";S.g1t=S.g1t||50000}
 if(S.u1==null)S.u1="$";if(S.u2==null)S.u2="$";S.g2n=S.g2n||"";
-if(!S.ach)S.ach=S.gset===false?[]:[{id:"a1",e:"🏆",t:"$8.6K Payouts"},{id:"a2",e:"🏠",t:"Moved Out"},{id:"a3",e:"💪",t:"Gym Habit"},{id:"a4",e:"🎯",t:"2018 Goals"}];
+if(!S.ach)S.ach=[];
+S.ach=S.ach.filter(function(a){var o={a1:"$8.6K Payouts",a2:"Moved Out",a3:"Gym Habit",a4:"2018 Goals"};return o[a.id]!==a.t});
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 var FN={d:"DAILY",w:"WEEKLY",m:"MONTHLY",y:"YEARLY"},SN={a:"ACTIVE",p:"PAUSED",x:"ARCHIVED"},VIEW="a",ED=null,EF="d",ES="a";
 var CALM=null,CALD="",CALP="";
