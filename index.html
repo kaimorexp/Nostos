@@ -173,6 +173,7 @@ body{padding-bottom:120px}
 .cf{position:absolute;top:-12px;width:8px;height:12px;border-radius:2px;opacity:0;animation:cfall 2.4s ease-in forwards;pointer-events:none}
 @keyframes cfall{0%{opacity:1;transform:translateY(0) rotate(0)}100%{opacity:0;transform:translateY(440px) rotate(540deg)}}
 @media (prefers-reduced-motion:reduce){.celeb .band,.celeb .band:after,.celeb .band .sp,.pchip.pop,.cf{animation:none!important}}
+button.badge{font:700 12px Rajdhani,sans-serif;color:var(--white)}.badge small{display:block;opacity:.75;font-size:11px;margin-top:2px}
 .foot{text-align:center;font-size:8px;color:var(--ink);margin-top:10px;line-height:1.8}
 </style>
 </head>
@@ -241,7 +242,9 @@ body{padding-bottom:120px}
 </div>
 
 <div class="pg" data-p="3">
-<div class="card"><h2 class="px">ACHIEVEMENTS</h2><div class="badges" id="badges"></div></div>
+<div class="card"><h2 class="px">MY ACHIEVEMENTS</h2><div class="badges" id="myach"></div>
+ <button class="btn px gold" id="aadd">＋ ADD ACHIEVEMENT</button></div>
+<div class="card"><h2 class="px">MILESTONES</h2><div class="badges" id="badges"></div></div>
 <div class="card"><h2 class="px">THE LOG</h2><div id="cal"></div><div id="entries" style="margin-top:6px"></div></div>
 <div class="foot px" id="ftr">ODYSSEUS TOOK 10 YEARS HOME.<br>YOU’RE ALREADY MOVING.</div>
 </div>
@@ -301,6 +304,16 @@ body{padding-bottom:120px}
  <button class="btn px" id="gsave">SAVE GOALS</button>
  <button class="btn px w" id="gskip">SKIP FOR NOW</button>
  <button class="btn px w" id="gcl">CLOSE</button></div></div>
+<div class="modal" id="amodal"><div class="card">
+ <h2 class="px" id="ah"></h2>
+ <label>Emoji<input id="ae" maxlength="4"></label>
+ <label style="margin-top:10px">What did you achieve?<input id="at" maxlength="40" placeholder="e.g. First paycheck, Ran 5 km"></label>
+ <label style="margin-top:10px">Date<input id="ad" type="date"></label>
+ <label style="margin-top:10px">Note (optional)<textarea id="an" rows="2" maxlength="200"></textarea></label>
+ <div id="am" style="color:var(--gold);min-height:22px;margin-top:6px"></div>
+ <button class="btn px" id="asave">SAVE</button>
+ <button class="btn px w" id="adel">🗑 DELETE</button>
+ <button class="btn px w" id="acl">CLOSE</button></div></div>
 <datalist id="catl"></datalist>
 <div class="modal" id="edmodal"><div class="card" id="edcard">
  <h2 class="px" id="edh"></h2>
@@ -346,6 +359,7 @@ if(!S.cfg||!S.cfg.tasks)S.cfg={theme:"#4cc9ff",tabs:[1,2,3,0],tasks:JSON.parse(J
 var Q=S.cfg.tasks;S.mt=S.mt||[];S.pc=S.pc||{};S.goals=S.goals||[];S.xpb=S.xpb||0;
 if(S.gset===false){S.g1n=S.g1n||"MY BIG GOAL";S.g1t=S.g1t||1000}else{S.g1n=S.g1n||"50K IN 2019 EC";S.g1t=S.g1t||50000}
 if(S.u1==null)S.u1="$";if(S.u2==null)S.u2="$";S.g2n=S.g2n||"";
+if(!S.ach)S.ach=S.gset===false?[]:[{id:"a1",e:"🏆",t:"$8.6K Payouts"},{id:"a2",e:"🏠",t:"Moved Out"},{id:"a3",e:"💪",t:"Gym Habit"},{id:"a4",e:"🎯",t:"2018 Goals"}];
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 var FN={d:"DAILY",w:"WEEKLY",m:"MONTHLY",y:"YEARLY"},SN={a:"ACTIVE",p:"PAUSED",x:"ARCHIVED"},VIEW="a",ED=null,EF="d",ES="a";
 var CALM=null,CALD="",CALP="";
@@ -387,12 +401,12 @@ function render(){
  $("lapTxt").textContent=fu(S.lapS,S.u2)+" / "+fu(S.lapT,S.u2);$("lapBar").style.width=pct(S.lapS,S.lapT)+"%";
  $("earnTxt").textContent=fu(S.earn,S.u1)+" / "+fu(S.g1t,S.u1);$("earnBar").style.width=pct(S.earn,S.g1t)+"%";
  $("bossLeft").textContent=fu(Math.max(0,S.g1t-S.earn),S.u1)+" left before "+(V?V.g:"ITHACA");
- var B=[["🏆","$8.6K Payouts",1],["🏠","Moved Out",1],["💪","Gym Habit",1],["🎯","2018 Goals",1],["⚡","First Trial",xp()>0],["📜","First Log",Object.keys(S.log).length>0],["🔥","7-Day Streak",best()>=7],["💻",(V&&V.n=="ODYSSEUS"&&!S.g2n)?"Ship Rebuilt":"Quest 1 Done",S.lapT>0&&S.lapS>=S.lapT],["💰","First Steps",S.earn>=S.g1t*0.02],["📚","7 Logs",Object.keys(S.log).length>=7],["👑",(V&&V.n=="ODYSSEUS")?"Ithaca":"Goal Reached",S.earn>=S.g1t]];
+ var B=[["⚡","First Trial",xp()>0],["📜","First Log",Object.keys(S.log).length>0],["🔥","7-Day Streak",best()>=7],["💻",(V&&V.n=="ODYSSEUS"&&!S.g2n)?"Ship Rebuilt":"Quest 1 Done",S.lapT>0&&S.lapS>=S.lapT],["💰","First Steps",S.earn>=S.g1t*0.02],["📚","7 Logs",Object.keys(S.log).length>=7],["👑",(V&&V.n=="ODYSSEUS")?"Ithaca":"Goal Reached",S.earn>=S.g1t]];
  $("badges").innerHTML=B.map(function(b){return '<div class="badge '+(b[2]?'on':'lock')+'"><div>'+b[0]+'</div>'+b[1]+'</div>'}).join("");
  var ks=(CALD&&S.log[CALD])?[CALD]:[],h="";renderCal();
  ks.forEach(function(k){var e=S.log[k],it=e.items||[{t:"",text:e.text,mood:e.mood,imgs:e.imgs||[]}];
   for(var n=it.length-1;n>=0;n--){var x=it[n];h+='<div class="entry"><div class="h px"><span>'+k+(x.t?' · '+x.t:'')+'</span><span style="font-size:14px">'+(x.mood?MO[x.mood-1]:'')+'</span><span class="sp"></span><span>'+cnt(k)+'/'+Q.length+'</span><button data-del="'+k+'" data-di="'+n+'">✕</button></div><p>'+esc(x.text)+'</p>'+((x.imgs&&x.imgs.length)?'<div class="imgs" data-ids="'+x.imgs.join(",")+'"></div>':'')+'</div>'}});
- $("entries").innerHTML=h||(CALD?'<div style="color:var(--mute)">No entry on '+CALD+'.</div>':(Object.keys(S.log).length?'<div style="color:var(--mute)">Tap a highlighted day to read that day’s log.</div>':'<div style="color:var(--mute)">No entries yet. Your first log starts the story.</div>'));fillImgs();renderMine();
+ $("entries").innerHTML=h||(CALD?'<div style="color:var(--mute)">No entry on '+CALD+'.</div>':(Object.keys(S.log).length?'<div style="color:var(--mute)">Tap a highlighted day to read that day’s log.</div>':'<div style="color:var(--mute)">No entries yet. Your first log starts the story.</div>'));fillImgs();renderMine();renderAch();
 }
 function pop(el,txt){var p=document.createElement("div");p.className="pop";p.textContent=txt;var r=el.getBoundingClientRect();p.style.left=(r.left+r.width/2-40)+"px";p.style.top=r.top+"px";document.body.appendChild(p);setTimeout(function(){p.remove()},900)}
 $("quests").addEventListener("click",function(e){var b=e.target.closest("[data-q]");if(!b)return;var h=b.getAttribute("data-q"),k=dk(0);
@@ -627,6 +641,18 @@ $("gsave").addEventListener("click",function(){var n1=$("g1n").value.trim().slic
  S.g1n=n1.toUpperCase();S.g1t=t1;S.u1=u1;S.g2n=n2.toUpperCase();if(t2>0)S.lapT=t2;S.u2=u2;S.gset=true;save();$("gmodal").classList.remove("show");applyTheme(S.cfg.theme)});
 $("gskip").addEventListener("click",function(){S.g1n="MY BIG GOAL";S.g1t=1000;S.u1="$";S.g2n="";S.u2="$";S.gset=true;save();$("gmodal").classList.remove("show");applyTheme(S.cfg.theme)});
 if(CUR&&S.gset===false)setTimeout(function(){openG(true)},600);
+var AE=null;
+function renderAch(){$("myach").innerHTML=S.ach.length?S.ach.map(function(a){return '<button class="badge on" data-ac="'+a.id+'"><div>'+esc(a.e||"🏆")+'</div>'+esc(a.t)+(a.d?'<small>'+esc(a.d)+'</small>':'')+'</button>'}).join(""):'<div style="grid-column:1/-1;color:var(--mute)">Nothing here yet. Add your first win, big or small.</div>'}
+function openA(id){var o=S.ach.filter(function(x){return x.id==id})[0]||null;AE=o;$("ah").textContent=o?"EDIT ACHIEVEMENT":"NEW ACHIEVEMENT";$("ae").value=o?(o.e||"🏆"):"🏆";$("at").value=o?o.t:"";$("ad").value=o?(o.d||""):dk(0);$("an").value=o?(o.n||""):"";$("adel").style.display=o?"block":"none";$("adel").removeAttribute("data-s");$("adel").textContent="🗑 DELETE";$("am").textContent="";$("amodal").classList.add("show")}
+$("aadd").addEventListener("click",function(){openA()});
+$("myach").addEventListener("click",function(e){var b=e.target.closest("[data-ac]");if(b)openA(b.getAttribute("data-ac"))});
+$("acl").addEventListener("click",function(){$("amodal").classList.remove("show")});
+$("asave").addEventListener("click",function(){var t=$("at").value.trim().slice(0,40);if(!t){$("am").textContent="Name your achievement.";return}
+ var v={e:$("ae").value.trim().slice(0,4)||"🏆",t:t,d:$("ad").value,n:$("an").value.trim().slice(0,200)};
+ if(AE)Object.assign(AE,v);else S.ach.push(Object.assign({id:uid()},v));
+ save();render();$("amodal").classList.remove("show")});
+$("adel").addEventListener("click",function(){var b=this;if(!b.getAttribute("data-s")){b.setAttribute("data-s","1");b.textContent="TAP AGAIN TO DELETE";return}
+ b.removeAttribute("data-s");if(AE)S.ach=S.ach.filter(function(x){return x.id!=AE.id});save();render();$("amodal").classList.remove("show")});
 function lmode(m){$("lview").style.display=m=="s"?"none":"block";$("sview").style.display=m=="s"?"block":"none";$("gosign").style.display=m=="s"?"none":"inline-block";$("goback").style.display=m=="s"?"inline-block":"none";lmsg("")}
 $("gosign").addEventListener("click",function(){lmode("s")});$("goback").addEventListener("click",function(){lmode("l")});
 function welcome(){var w=$("welc");w.innerHTML='<span>'+V.e+'</span><div>'+V.w+'<small>'+esc(S.name||CUR)+'</small></div>';w.className="vibe px show";setTimeout(function(){w.className="vibe px"},3800)}
