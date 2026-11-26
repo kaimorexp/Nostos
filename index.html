@@ -197,12 +197,14 @@ button.badge{font:700 12px Rajdhani,sans-serif;color:var(--white)}.badge small{d
 <div class="card say"><div class="e" id="qe">🏛️</div><p id="quote"></p></div>
 <div class="card"><h2 class="px">MY WHY</h2>
  <textarea id="why" rows="3" placeholder="Write it in your own words…"></textarea></div>
-<div class="card"><h2 class="px" id="gtitle">ITHACA · 50K IN 2019 EC</h2>
+<div class="card" id="g1done" style="display:none"><h2 class="px">🏁 BIG GOAL COMPLETE</h2><p id="g1dt" style="margin:0 0 6px"></p><button class="btn px gold" id="g1new">＋ START A NEW GOAL</button></div>
+<div class="card" id="g1card"><h2 class="px" id="gtitle">ITHACA · 50K IN 2019 EC</h2>
  <p class="big px" id="earnTxt"></p><div class="bar boss"><i id="earnBar"></i></div>
  <div id="bossLeft" style="font-size:14px;color:var(--mute);margin-top:8px"></div>
  <label style="margin-top:12px">Progress so far<input id="earn" type="number" inputmode="decimal"></label>
  <button class="chip" id="g1e" style="margin-top:12px">✎ EDIT GOALS</button></div>
-<div class="card"><h2 class="px" id="qtitle">QUEST 1 · REBUILD THE SHIP</h2>
+<div class="card" id="g2done" style="display:none"><h2 class="px">✅ QUEST COMPLETE</h2><p id="g2dt" style="margin:0 0 6px"></p><button class="btn px gold" id="g2new">＋ START A NEW QUEST</button></div>
+<div class="card" id="g2card"><h2 class="px" id="qtitle">QUEST 1 · REBUILD THE SHIP</h2>
  <p class="big px" id="lapTxt"></p><div class="bar"><i id="lapBar"></i></div>
  <div class="two"><label>Saved so far<input id="lapS" type="number" inputmode="decimal"></label>
  <label>Target<input id="lapT" type="number" inputmode="decimal"></label></div>
@@ -228,8 +230,7 @@ button.badge{font:700 12px Rajdhani,sans-serif;color:var(--white)}.badge small{d
 <div class="pg" data-p="2">
 <div class="card"><h2 class="px">WORD OF THE DAY</h2>
  <div class="vs"><div class="vt" id="vt"></div><div class="vr px" id="vr"></div></div>
- <div class="lang"><div class="fl">🇨🇳</div><div><b id="zh"></b><span class="py" id="zp"></span><span class="mn" id="zm"></span><small id="ze"></small></div></div>
- <div class="lang"><div class="fl">🇪🇸</div><div><b id="sw"></b><span class="mn" id="sm"></span><small id="se"></small></div></div>
+ <div id="wlangs"></div>
  <button class="btn px gold" id="lrn"></button></div>
 </div>
 
@@ -271,13 +272,19 @@ button.badge{font:700 12px Rajdhani,sans-serif;color:var(--white)}.badge small{d
   <div class="moods" id="lock"><button class="mood on" data-l="fp">☝️<small>FINGER</small></button><button class="mood" data-l="pin">🔢<small>PIN</small></button><button class="mood" data-l="none">🚫<small>NONE</small></button></div>
   <input id="lnewpin" type="password" inputmode="numeric" maxlength="8" placeholder="New PIN (4–8 digits)" style="display:none">
   <button class="btn px" id="lcreate">⚓ CREATE &amp; ENTER</button>
+  <h2 class="px" style="margin-top:20px">HAVE A BACKUP?</h2>
+  <div class="mtm">Type your old username above, paste your backup code (or pick the file), choose a lock, then restore.</div>
+  <textarea id="lrest" rows="3" placeholder="Paste your backup code here" style="font-size:16px"></textarea>
+  <input type="file" id="lrestf" accept=".txt,text/plain" style="display:none">
+  <button class="btn px w" id="lpick">📂 PICK BACKUP FILE</button>
+  <button class="btn px gold" id="lrestb">♻️ RESTORE MY ACCOUNT</button>
  </div>
  <div id="lmsg"></div>
  <div class="lsw"><button class="chip" id="gosign">＋ NEW HERO? SIGN UP</button><button class="chip" id="goback" style="display:none">← BACK TO LOGIN</button></div></div></div>
 
 <div class="modal" id="setmodal"><div class="card">
  <h2 class="px" style="margin:0 0 10px">SETTINGS</h2>
- <div class="stabs" id="stabs"><button data-st="acct">👤 ACCOUNT</button><button data-st="theme">🎨 THEMES</button><button data-st="tabs">↕️ TABS</button><button data-st="tasks">✅ TASKS</button><button data-st="bk">🛡️ BACKUP</button></div>
+ <div class="stabs" id="stabs"><button data-st="acct">👤 ACCOUNT</button><button data-st="theme">🎨 THEMES</button><button data-st="tabs">↕️ TABS</button><button data-st="tasks">✅ TASKS</button><button data-st="words">🌍 WORDS</button><button data-st="bk">🛡️ BACKUP</button></div>
  <div class="sbody">
   <div class="sp" data-sp="acct"><div id="acct" style="margin-bottom:8px"></div>
    <div class="srow" id="lockbar"><button data-lk="fp">☝️ FINGERPRINT</button><button data-lk="none">🚫 NO LOCK</button></div>
@@ -288,6 +295,9 @@ button.badge{font:700 12px Rajdhani,sans-serif;color:var(--white)}.badge small{d
    <label style="margin-top:14px">Custom color<input id="tcol" type="color" style="height:46px;padding:4px"></label></div>
   <div class="sp" data-sp="tabs"><div class="mtm">Move tabs up or down. The first one opens when you start the app.</div><div id="tabset"></div></div>
   <div class="sp" data-sp="tasks"><div id="taskset"></div><button class="btn px w" id="tadd">＋ ADD TASK</button></div>
+  <div class="sp" data-sp="words"><div class="mtm">Turn the Words tab (verse of the day + vocabulary) on or off, and pick the languages you want to learn.</div>
+   <button class="btn px w" id="wtog"></button>
+   <div class="chips" id="lgrid" style="margin-top:14px"></div></div>
   <div class="sp" data-sp="bk"><div class="mtm">Make a backup code or file, or restore from one.</div><button class="btn px w" id="bkm">🛡️ OPEN BACKUP &amp; RESTORE</button></div>
  </div>
  <button class="btn px" id="setc">DONE</button></div></div>
@@ -295,14 +305,16 @@ button.badge{font:700 12px Rajdhani,sans-serif;color:var(--white)}.badge small{d
 <div class="modal" id="gmodal"><div class="card">
  <h2 class="px" id="gh">YOUR GOALS</h2>
  <div class="mtm" id="gsub"></div>
- <h2 class="px">BIG GOAL</h2>
+ <div id="gs1"><h2 class="px">BIG GOAL</h2>
  <label>What do you want to achieve?<input id="g1n" maxlength="40" placeholder="e.g. Earn 50K, Run a marathon, Lose 10 kg"></label>
  <div class="two"><label>Target<input id="g1t" type="number" inputmode="decimal" min="1" placeholder="50000"></label><label>Unit<input id="g1u" maxlength="8" placeholder="$, km, kg…"></label></div>
  <label style="margin-top:10px">Where are you now? (optional)<input id="g1p" type="number" inputmode="decimal" min="0"></label>
- <h2 class="px" style="margin-top:16px">FIRST QUEST</h2>
+ </div>
+ <div id="gs2"><h2 class="px" style="margin-top:16px">FIRST QUEST</h2>
  <label>A smaller goal to start with<input id="g2n" maxlength="40" placeholder="e.g. Save for a laptop"></label>
  <div class="two"><label>Target<input id="g2t" type="number" inputmode="decimal" min="1" placeholder="400"></label><label>Unit<input id="g2u" maxlength="8" placeholder="$, km, kg…"></label></div>
  <label style="margin-top:10px">Where are you now? (optional)<input id="g2p" type="number" inputmode="decimal" min="0"></label>
+ </div>
  <div id="gm" style="color:var(--gold);min-height:22px;margin-top:8px"></div>
  <button class="btn px" id="gsave">SAVE GOALS</button>
  <button class="btn px w" id="gskip">SET LATER</button>
@@ -363,11 +375,12 @@ var Q=S.cfg.tasks;S.mt=S.mt||[];S.pc=S.pc||{};S.goals=S.goals||[];S.xpb=S.xpb||0
 if(S.gset===undefined&&(!S.g1t||(S.g1t===50000&&S.g1n==="50K IN 2019 EC"))){S.gset=false;S.g1n="MY BIG GOAL";S.g1t=1000}
 S.g1n=S.g1n||"MY BIG GOAL";S.g1t=S.g1t||1000;
 if(S.u1==null)S.u1="$";if(S.u2==null)S.u2="$";S.g2n=S.g2n||"";
+S.langs=S.langs||["zh","es"];if(S.wordsOn==null)S.wordsOn=true;S.g1d=!!S.g1d;S.g2d=!!S.g2d;
 if(!S.ach)S.ach=[];
 S.ach=S.ach.filter(function(a){var o={a1:"$8.6K Payouts",a2:"Moved Out",a3:"Gym Habit",a4:"2018 Goals"};return o[a.id]!==a.t});
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 var FN={d:"DAILY",w:"WEEKLY",m:"MONTHLY",y:"YEARLY"},SN={a:"ACTIVE",p:"PAUSED",x:"ARCHIVED"},VIEW="a",ED=null,EF="d",ES="a";
-var VER="2.7 · 9 themes (Arkham midnight, Arcane palette)";
+var VER="2.8 · goals complete, 14 languages, words toggle, restore";
 var CALM=null,CALD="",CALP="";
 var MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
 var CATS=["Faith","Body","Mind","Money","Life"];
@@ -378,10 +391,11 @@ function save(){var ok=false;if(!CUR)return false;try{localStorage.setItem(ukey(
 function $(i){return document.getElementById(i)}
 function dk(o){var d=new Date();d.setDate(d.getDate()-(o||0));return d.toLocaleDateString("en-CA")}
 function done(k,id){if(id=="journal")return !!S.log[k];if(id=="word")return !!(S.learn&&S.learn[k]);return !!(S.d[k]&&S.d[k][id])}
-function cnt(k){var c=0;Q.forEach(function(q){if(done(k,q[0]))c++});return c}
-function manual(k){var c=0;Q.forEach(function(q){if(q[0]!="journal"&&q[0]!="word"&&done(k,q[0]))c++});return c}
+function QL(){return S.wordsOn===false?Q.filter(function(q){return q[0]!="word"}):Q}
+function cnt(k){var c=0;QL().forEach(function(q){if(done(k,q[0]))c++});return c}
+function manual(k){var c=0;QL().forEach(function(q){if(q[0]!="journal"&&q[0]!="word"&&done(k,q[0]))c++});return c}
 function xp(){var x=0,ks={};Object.keys(S.d).concat(Object.keys(S.log)).concat(Object.keys(S.learn||{})).forEach(function(k){ks[k]=1});
- Object.keys(ks).forEach(function(k){x+=manual(k)*20;if(cnt(k)==Q.length)x+=50});
+ Object.keys(ks).forEach(function(k){x+=manual(k)*20;if(cnt(k)==QL().length)x+=50});
  return x+Object.keys(S.log).length*30+Object.keys(S.learn||{}).filter(function(k){return S.learn[k]}).length*15+extraXP()+(S.xpb||0)}
 function good(k){return cnt(k)>=5||!!S.log[k]}
 function streak(){var n=0,o=good(dk(0))?0:1;while(good(dk(o))){n++;o++}return n}
@@ -390,16 +404,16 @@ function pct(a,b){return Math.max(0,Math.min(100,b>0?a/b*100:0))}
 function usd(n){return "$"+Number(n||0).toLocaleString()}
 function fu(n,u){n=Number(n||0).toLocaleString();u=(u==null?"$":u);if(!u)return n;return /^[^A-Za-z0-9\s]{1,2}$/.test(u)?u+n:n+" "+u}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
-function render(){
+function render(){if(S.ach&&checkDone())save();
  var x=xp();setAv();$("pname").textContent=S.name;
  $("lvl").textContent="LVL "+(Math.floor(x/100)+1);$("xpBar").style.width=(x%100)+"%";
  $("sStreak").textContent=streak();$("sXp").textContent=x;$("sLog").textContent=Object.keys(S.log).length;
  var t=S.d[dk(0)]||{};
- $("quests").innerHTML=Q.map(function(q){var on=done(dk(0),q[0]);return '<button class="quest'+(on?' on':'')+'" data-q="'+q[0]+'"><div class="ic">'+esc(q[1])+'</div><div class="t">'+esc(q[2])+'<span class="xp">'+q[3]+'</span></div><div class="ck">'+(on?'✓':'')+'</div></button>'}).join("");
- $("today").textContent=cnt(dk(0))+"/"+Q.length+" DONE"+(cnt(dk(0))==Q.length?" · +50 BONUS!":" · ALL "+Q.length+" = +50 BONUS");
+ $("quests").innerHTML=QL().map(function(q){var on=done(dk(0),q[0]);return '<button class="quest'+(on?' on':'')+'" data-q="'+q[0]+'"><div class="ic">'+esc(q[1])+'</div><div class="t">'+esc(q[2])+'<span class="xp">'+q[3]+'</span></div><div class="ck">'+(on?'✓':'')+'</div></button>'}).join("");
+ $("today").textContent=cnt(dk(0))+"/"+QL().length+" DONE"+(cnt(dk(0))==QL().length?" · +50 BONUS!":" · ALL "+QL().length+" = +50 BONUS");
  $("moods").innerHTML=MO.map(function(m,i){return '<button class="mood'+(S.mood==i+1?' on':'')+'" data-m="'+(i+1)+'">'+m+'</button>'}).join("");
  var days=[],ch="";for(var i=13;i>=0;i--){var k=dk(i),c=cnt(k),dt=new Date(k+"T12:00:00");
-  ch+='<div class="col"><span>'+(S.log[k]?'📜':'')+'</span><i style="height:'+(c/Q.length*70)+'px"></i><u>'+"SMTWTFS".charAt(dt.getDay())+'</u></div>'}
+  ch+='<div class="col"><span>'+(S.log[k]?'📜':'')+'</span><i style="height:'+(c/QL().length*70)+'px"></i><u>'+"SMTWTFS".charAt(dt.getDay())+'</u></div>'}
  $("chart").innerHTML=ch;
  var act=0,ms=0,mc=0;Object.keys(S.d).forEach(function(k){if(cnt(k)>0)act++});
  Object.keys(S.log).forEach(function(k){if(S.log[k].mood){ms+=S.log[k].mood;mc++}});
@@ -408,11 +422,13 @@ function render(){
  $("earnTxt").textContent=fu(S.earn,S.u1)+" / "+fu(S.g1t,S.u1);$("earnBar").style.width=pct(S.earn,S.g1t)+"%";
  $("bossLeft").textContent=fu(Math.max(0,S.g1t-S.earn),S.u1)+" left before "+(V?V.g:"ITHACA");
  if(S.gset===false){$("earnTxt").textContent="No goal set yet";$("earnBar").style.width="0%";$("bossLeft").textContent="Tap EDIT GOALS to choose what you’re chasing.";$("lapTxt").textContent="No quest set yet";$("lapBar").style.width="0%"}
+ $("g1card").style.display=S.g1d?"none":"";$("g1done").style.display=S.g1d?"block":"none";$("g2card").style.display=S.g2d?"none":"";$("g2done").style.display=S.g2d?"block":"none";
+ $("g1dt").textContent="“"+S.g1n+"” is done and saved in your Achievements. Ready for the next one?";$("g2dt").textContent="Quest done and saved in your Achievements. Ready for the next one?"
  var B=[["⚡","First Trial",xp()>0],["📜","First Log",Object.keys(S.log).length>0],["🔥","7-Day Streak",best()>=7],["💻",(V&&V.n=="ODYSSEUS"&&!S.g2n)?"Ship Rebuilt":"Quest 1 Done",S.gset!==false&&S.lapT>0&&S.lapS>=S.lapT],["💰","First Steps",S.gset!==false&&S.earn>=S.g1t*0.02],["📚","7 Logs",Object.keys(S.log).length>=7],["👑",(V&&V.n=="ODYSSEUS")?"Ithaca":"Goal Reached",S.gset!==false&&S.earn>=S.g1t]];
  $("badges").innerHTML=B.map(function(b){return '<div class="badge '+(b[2]?'on':'lock')+'"><div>'+b[0]+'</div>'+b[1]+'</div>'}).join("");
  var ks=(CALD&&S.log[CALD])?[CALD]:[],h="";renderCal();
  ks.forEach(function(k){var e=S.log[k],it=e.items||[{t:"",text:e.text,mood:e.mood,imgs:e.imgs||[]}];
-  for(var n=it.length-1;n>=0;n--){var x=it[n];h+='<div class="entry"><div class="h px"><span>'+k+(x.t?' · '+x.t:'')+'</span><span style="font-size:14px">'+(x.mood?MO[x.mood-1]:'')+'</span><span class="sp"></span><span>'+cnt(k)+'/'+Q.length+'</span><button data-del="'+k+'" data-di="'+n+'">✕</button></div><p>'+esc(x.text)+'</p>'+((x.imgs&&x.imgs.length)?'<div class="imgs" data-ids="'+x.imgs.join(",")+'"></div>':'')+'</div>'}});
+  for(var n=it.length-1;n>=0;n--){var x=it[n];h+='<div class="entry"><div class="h px"><span>'+k+(x.t?' · '+x.t:'')+'</span><span style="font-size:14px">'+(x.mood?MO[x.mood-1]:'')+'</span><span class="sp"></span><span>'+cnt(k)+'/'+QL().length+'</span><button data-del="'+k+'" data-di="'+n+'">✕</button></div><p>'+esc(x.text)+'</p>'+((x.imgs&&x.imgs.length)?'<div class="imgs" data-ids="'+x.imgs.join(",")+'"></div>':'')+'</div>'}});
  $("entries").innerHTML=h||(CALD?'<div style="color:var(--mute)">No entry on '+CALD+'.</div>':(Object.keys(S.log).length?'<div style="color:var(--mute)">Tap a highlighted day to read that day’s log.</div>':'<div style="color:var(--mute)">No entries yet. Your first log starts the story.</div>'));fillImgs();renderMine();renderAch();
 }
 function pop(el,txt){var p=document.createElement("div");p.className="pop";p.textContent=txt;var r=el.getBoundingClientRect();p.style.left=(r.left+r.width/2-40)+"px";p.style.top=r.top+"px";document.body.appendChild(p);setTimeout(function(){p.remove()},900)}
@@ -443,10 +459,18 @@ save();render();
 var VERSES=[["JOSHUA 1:9","Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest."],["PHILIPPIANS 4:13","I can do all things through Christ which strengtheneth me."],["ISAIAH 41:10","Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee."],["JEREMIAH 29:11","For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end."],["PROVERBS 3:5-6","Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths."],["PSALM 23:1","The LORD is my shepherd; I shall not want."],["ROMANS 8:28","And we know that all things work together for good to them that love God, to them who are the called according to his purpose."],["GALATIANS 6:9","And let us not be weary in well doing: for in due season we shall reap, if we faint not."],["PSALM 34:18","The LORD is nigh unto them that are of a broken heart; and saveth such as be of a contrite spirit."],["MATTHEW 6:33","But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you."],["ISAIAH 40:31","But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary."],["PSALM 46:1","God is our refuge and strength, a very present help in trouble."],["PROVERBS 24:16","For a just man falleth seven times, and riseth up again."],["MICAH 7:8","When I fall, I shall arise; when I sit in darkness, the LORD shall be a light unto me."],["1 JOHN 1:9","If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness."],["PSALM 51:10","Create in me a clean heart, O God; and renew a right spirit within me."],["MATTHEW 11:28","Come unto me, all ye that labour and are heavy laden, and I will give you rest."],["2 TIMOTHY 1:7","For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind."],["PSALM 27:1","The LORD is my light and my salvation; whom shall I fear? the LORD is the strength of my life; of whom shall I be afraid?"],["PROVERBS 16:3","Commit thy works unto the LORD, and thy thoughts shall be established."],["DEUTERONOMY 31:6","Be strong and of a good courage, fear not: for the LORD thy God, he it is that doth go with thee; he will not fail thee, nor forsake thee."],["ROMANS 12:12","Rejoicing in hope; patient in tribulation; continuing instant in prayer."],["JAMES 1:3","Knowing this, that the trying of your faith worketh patience."],["PSALM 37:5","Commit thy way unto the LORD; trust also in him; and he shall bring it to pass."],["LAMENTATIONS 3:22-23","It is of the LORD’S mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness."],["HEBREWS 11:1","Now faith is the substance of things hoped for, the evidence of things not seen."],["PROVERBS 21:5","The thoughts of the diligent tend only to plenteousness; but of every one that is hasty only to want."],["1 CORINTHIANS 10:13","God is faithful, who will not suffer you to be tempted above that ye are able; but will with the temptation also make a way to escape, that ye may be able to bear it."],["PSALM 30:5","Weeping may endure for a night, but joy cometh in the morning."],["PSALM 121:1-2","I will lift up mine eyes unto the hills, from whence cometh my help. My help cometh from the LORD, which made heaven and earth."]];
 var ZH=[["希望","xīwàng","hope","我有希望。","Wǒ yǒu xīwàng.","I have hope."],["力量","lìliang","strength","神给我力量。","Shén gěi wǒ lìliang.","God gives me strength."],["坚持","jiānchí","to persevere","我每天坚持。","Wǒ měitiān jiānchí.","I persevere every day."],["家","jiā","home","我想回家。","Wǒ xiǎng huí jiā.","I want to go home."],["信心","xìnxīn","confidence, faith","我有信心。","Wǒ yǒu xìnxīn.","I have confidence."],["钱","qián","money","我需要钱。","Wǒ xūyào qián.","I need money."],["目标","mùbiāo","goal","我的目标是五万。","Wǒ de mùbiāo shì wǔ wàn.","My goal is 50,000."],["努力","nǔlì","effort, to try hard","我努力工作。","Wǒ nǔlì gōngzuò.","I work hard."],["平安","píng’ān","peace, safe","愿你平安。","Yuàn nǐ píng’ān.","May you be at peace."],["耐心","nàixīn","patience","交易需要耐心。","Jiāoyì xūyào nàixīn.","Trading needs patience."],["勇敢","yǒnggǎn","brave","他很勇敢。","Tā hěn yǒnggǎn.","He is very brave."],["未来","wèilái","future","未来很光明。","Wèilái hěn guāngmíng.","The future is bright."],["朋友","péngyou","friend","他是我的朋友。","Tā shì wǒ de péngyou.","He is my friend."],["学习","xuéxí","to study","我每天学习。","Wǒ měitiān xuéxí.","I study every day."],["时间","shíjiān","time","时间就是金钱。","Shíjiān jiù shì jīnqián.","Time is money."],["梦想","mèngxiǎng","dream","我有一个梦想。","Wǒ yǒu yí gè mèngxiǎng.","I have a dream."],["胜利","shènglì","victory","胜利属于坚持的人。","Shènglì shǔyú jiānchí de rén.","Victory belongs to those who persevere."],["感谢","gǎnxiè","to thank","感谢神。","Gǎnxiè Shén.","Thank God."],["健康","jiànkāng","health","健康最重要。","Jiànkāng zuì zhòngyào.","Health matters most."],["纪律","jìlǜ","discipline","纪律带来自由。","Jìlǜ dàilái zìyóu.","Discipline brings freedom."],["风险","fēngxiǎn","risk","控制风险。","Kòngzhì fēngxiǎn.","Control the risk."],["机会","jīhuì","opportunity","机会来了。","Jīhuì lái le.","An opportunity has come."],["黄金","huángjīn","gold","我交易黄金。","Wǒ jiāoyì huángjīn.","I trade gold."],["重新开始","chóngxīn kāishǐ","to start over","我可以重新开始。","Wǒ kěyǐ chóngxīn kāishǐ.","I can start over."],["祷告","dǎogào","to pray","我每天祷告。","Wǒ měitiān dǎogào.","I pray every day."],["爱","ài","love","爱使我们坚强。","Ài shǐ wǒmen jiānqiáng.","Love makes us strong."],["回家","huíjiā","to return home","总有一天我会回家。","Zǒng yǒu yì tiān wǒ huì huíjiā.","One day I will return home."],["加油","jiāyóu","keep going!","加油！","Jiāyóu!","Keep going!"],["成功","chénggōng","success","成功需要时间。","Chénggōng xūyào shíjiān.","Success takes time."],["自由","zìyóu","freedom","我想要自由。","Wǒ xiǎng yào zìyóu.","I want freedom."]];
 var ES=[["esperanza","hope","Tengo esperanza.","I have hope."],["fuerza","strength","Dios me da fuerza.","God gives me strength."],["perseverar","to persevere","Voy a perseverar.","I am going to persevere."],["hogar","home","Quiero volver a mi hogar.","I want to return to my home."],["fe","faith","Mi fe es fuerte.","My faith is strong."],["dinero","money","Necesito dinero.","I need money."],["meta","goal","Mi meta es cincuenta mil.","My goal is fifty thousand."],["esfuerzo","effort","Cada día hago un esfuerzo.","Every day I make an effort."],["paz","peace","Busco la paz.","I seek peace."],["paciencia","patience","El trading requiere paciencia.","Trading requires patience."],["valiente","brave","Soy valiente.","I am brave."],["futuro","future","El futuro es mío.","The future is mine."],["amigo","friend","Mi amigo me ayuda.","My friend helps me."],["aprender","to learn","Quiero aprender cada día.","I want to learn every day."],["tiempo","time","El tiempo es oro.","Time is gold."],["sueño","dream","Mi sueño es real.","My dream is real."],["victoria","victory","La victoria llega con constancia.","Victory comes with consistency."],["gracias","thank you","Gracias, Dios.","Thank you, God."],["salud","health","La salud es lo primero.","Health comes first."],["disciplina","discipline","La disciplina vence al talento.","Discipline beats talent."],["riesgo","risk","Controlo mi riesgo.","I control my risk."],["oportunidad","opportunity","Llegó una oportunidad.","An opportunity arrived."],["oro","gold","Opero oro.","I trade gold."],["empezar","to begin","Puedo empezar de nuevo.","I can begin again."],["orar","to pray","Oro cada mañana.","I pray every morning."],["amor","love","El amor me da fuerza.","Love gives me strength."],["regresar","to return","Voy a regresar con éxito.","I will return with success."],["adelante","forward","¡Siempre adelante!","Always forward!"],["éxito","success","El éxito toma tiempo.","Success takes time."],["libertad","freedom","Quiero libertad.","I want freedom."]];
-function daily(){var DN=Math.floor(new Date(dk(0)+"T12:00:00")/864e5),v=VERSES[(DN*7)%30],z=ZH[(DN*11)%30],e=ES[(DN*13)%30];
+var EN30=["hope", "strength", "to persevere", "home", "faith", "money", "goal", "effort", "peace", "patience", "brave", "future", "friend", "to learn", "time", "dream", "victory", "thank you", "health", "discipline", "risk", "opportunity", "gold", "to begin", "to pray", "love", "to return", "forward", "success", "freedom"];
+var LG=[{"k": "zh", "n": "Chinese", "f": "🇨🇳", "m": 11}, {"k": "es", "n": "Spanish", "f": "🇪🇸", "m": 13}, {"k": "fr", "n": "French", "f": "🇫🇷", "m": 7}, {"k": "ar", "n": "Arabic", "f": "🇸🇦", "m": 17}, {"k": "am", "n": "Amharic", "f": "🇪🇹", "m": 1}, {"k": "de", "n": "German", "f": "🇩🇪", "m": 19}, {"k": "pt", "n": "Portuguese", "f": "🇵🇹", "m": 23}, {"k": "it", "n": "Italian", "f": "🇮🇹", "m": 29}, {"k": "ja", "n": "Japanese", "f": "🇯🇵", "m": 11}, {"k": "ko", "n": "Korean", "f": "🇰🇷", "m": 13}, {"k": "ru", "n": "Russian", "f": "🇷🇺", "m": 7}, {"k": "hi", "n": "Hindi", "f": "🇮🇳", "m": 17}, {"k": "tr", "n": "Turkish", "f": "🇹🇷", "m": 19}, {"k": "sw", "n": "Swahili", "f": "🇰🇪", "m": 23}];
+var LX={"fr": ["espoir", "force", "persévérer", "maison", "foi", "argent", "objectif", "effort", "paix", "patience", "courageux", "avenir", "ami", "apprendre", "temps", "rêve", "victoire", "merci", "santé", "discipline", "risque", "opportunité", "or", "commencer", "prier", "amour", "revenir", "en avant", "succès", "liberté"], "de": ["Hoffnung", "Stärke", "durchhalten", "Zuhause", "Glaube", "Geld", "Ziel", "Anstrengung", "Frieden", "Geduld", "mutig", "Zukunft", "Freund", "lernen", "Zeit", "Traum", "Sieg", "danke", "Gesundheit", "Disziplin", "Risiko", "Gelegenheit", "Gold", "beginnen", "beten", "Liebe", "zurückkehren", "vorwärts", "Erfolg", "Freiheit"], "pt": ["esperança", "força", "perseverar", "casa", "fé", "dinheiro", "meta", "esforço", "paz", "paciência", "corajoso", "futuro", "amigo", "aprender", "tempo", "sonho", "vitória", "obrigado", "saúde", "disciplina", "risco", "oportunidade", "ouro", "começar", "orar", "amor", "voltar", "em frente", "sucesso", "liberdade"], "it": ["speranza", "forza", "perseverare", "casa", "fede", "soldi", "obiettivo", "impegno", "pace", "pazienza", "coraggioso", "futuro", "amico", "imparare", "tempo", "sogno", "vittoria", "grazie", "salute", "disciplina", "rischio", "opportunità", "oro", "iniziare", "pregare", "amore", "tornare", "avanti", "successo", "libertà"], "tr": ["umut", "güç", "sebat etmek", "ev", "inanç", "para", "hedef", "çaba", "barış", "sabır", "cesur", "gelecek", "arkadaş", "öğrenmek", "zaman", "hayal", "zafer", "teşekkürler", "sağlık", "disiplin", "risk", "fırsat", "altın", "başlamak", "dua etmek", "aşk", "geri dönmek", "ileri", "başarı", "özgürlük"], "sw": ["matumaini", "nguvu", "kuvumilia", "nyumbani", "imani", "pesa", "lengo", "juhudi", "amani", "subira", "jasiri", "siku zijazo", "rafiki", "kujifunza", "wakati", "ndoto", "ushindi", "asante", "afya", "nidhamu", "hatari", "fursa", "dhahabu", "kuanza", "kusali", "upendo", "kurudi", "mbele", "mafanikio", "uhuru"], "ru": ["надежда|nadezhda", "сила|sila", "упорствовать|uporstvovat’", "дом|dom", "вера|vera", "деньги|den’gi", "цель|tsel’", "усилие|usilie", "мир|mir", "терпение|terpenie", "храбрый|khrabryy", "будущее|budushchee", "друг|drug", "учиться|uchit’sya", "время|vremya", "мечта|mechta", "победа|pobeda", "спасибо|spasibo", "здоровье|zdorov’e", "дисциплина|distsiplina", "риск|risk", "возможность|vozmozhnost’", "золото|zoloto", "начинать|nachinat’", "молиться|molit’sya", "любовь|lyubov’", "вернуться|vernut’sya", "вперёд|vperyod", "успех|uspekh", "свобода|svoboda"], "ar": ["أمل|amal", "قوة|quwwa", "يثابر|yuthābir", "بيت|bayt", "إيمان|īmān", "مال|māl", "هدف|hadaf", "جهد|juhd", "سلام|salām", "صبر|ṣabr", "شجاع|shujāʿ", "مستقبل|mustaqbal", "صديق|ṣadīq", "يتعلم|yataʿallam", "وقت|waqt", "حلم|ḥulm", "نصر|naṣr", "شكرًا|shukran", "صحة|ṣiḥḥa", "انضباط|inḍibāṭ", "مخاطرة|mukhāṭara", "فرصة|furṣa", "ذهب|dhahab", "يبدأ|yabdaʾ", "يصلي|yuṣallī", "حب|ḥubb", "يعود|yaʿūd", "إلى الأمام|ilā al-amām", "نجاح|najāḥ", "حرية|ḥurriyya"], "ja": ["希望|kibō", "力|chikara", "粘る|nebaru", "家|ie", "信仰|shinkō", "お金|okane", "目標|mokuhyō", "努力|doryoku", "平和|heiwa", "忍耐|nintai", "勇敢|yūkan", "未来|mirai", "友達|tomodachi", "学ぶ|manabu", "時間|jikan", "夢|yume", "勝利|shōri", "ありがとう|arigatō", "健康|kenkō", "規律|kiritsu", "リスク|risuku", "機会|kikai", "金|kin", "始める|hajimeru", "祈る|inoru", "愛|ai", "帰る|kaeru", "前へ|mae e", "成功|seikō", "自由|jiyū"], "ko": ["희망|huimang", "힘|him", "인내하다|innaehada", "집|jip", "믿음|mideum", "돈|don", "목표|mokpyo", "노력|noryeok", "평화|pyeonghwa", "인내|innae", "용감한|yonggamhan", "미래|mirae", "친구|chingu", "배우다|baeuda", "시간|sigan", "꿈|kkum", "승리|seungri", "감사합니다|gamsahamnida", "건강|geongang", "규율|gyuyul", "위험|wiheom", "기회|gihoe", "금|geum", "시작하다|sijakhada", "기도하다|gidohada", "사랑|sarang", "돌아가다|doragada", "앞으로|apeuro", "성공|seonggong", "자유|jayu"], "hi": ["आशा|āshā", "शक्ति|shakti", "डटे रहना|ḍaṭe rahnā", "घर|ghar", "विश्वास|vishvās", "पैसा|paisā", "लक्ष्य|lakṣya", "प्रयास|prayās", "शांति|shānti", "धैर्य|dhairya", "बहादुर|bahādur", "भविष्य|bhaviṣya", "दोस्त|dost", "सीखना|sīkhnā", "समय|samay", "सपना|sapnā", "जीत|jīt", "धन्यवाद|dhanyavād", "सेहत|sehat", "अनुशासन|anushāsan", "जोखिम|jokhim", "अवसर|avsar", "सोना|sonā", "शुरू करना|shurū karnā", "प्रार्थना करना|prārthanā karnā", "प्यार|pyār", "लौटना|lauṭnā", "आगे|āge", "सफलता|saphaltā", "आज़ादी|āzādī"], "am": ["ተስፋ|tesfa", "ጥንካሬ|tinkare", "መጽናት|metsinat", "ቤት|bet", "እምነት|imnet", "ገንዘብ|genzeb", "ግብ|gib", "ጥረት|tiret", "ሰላም|selam", "ትዕግሥት|ti’igist", "ደፋር|defar", "መጪው ጊዜ|mechiw gize", "ጓደኛ|gwadegna", "መማር|memar", "ጊዜ|gize", "ሕልም|hilm", "ድል|dil", "አመሰግናለሁ|ameseginalehu", "ጤና|tena", "ተግሣጽ|tegsets", "አደጋ|adega", "አጋጣሚ|agatami", "ወርቅ|werk", "መጀመር|mejemer", "መጸለይ|metseley", "ፍቅር|fikir", "መመለስ|memeles", "ወደፊት|wedefit", "ስኬት|siket", "ነፃነት|netsanet"]};
+function lw(L,w,r,m,ex){return '<div class="lang"><div class="fl">'+L.f+'</div><div><b>'+esc(w)+'</b>'+(r?'<span class="py">'+esc(r)+'</span>':'')+'<span class="mn">'+esc(m)+'</span>'+(ex?'<small>'+esc(ex)+'</small>':'')+'<small>'+L.n+'</small></div></div>'}
+function daily(){var DN=Math.floor(new Date(dk(0)+"T12:00:00")/864e5),v=VERSES[(DN*7)%30];
  $("vt").textContent="“"+v[1]+"”";$("vr").textContent="— "+v[0]+" (KJV)";
- $("zh").textContent=z[0];$("zp").textContent=z[1];$("zm").textContent=z[2];$("ze").textContent=z[3]+" "+z[4]+" — "+z[5];
- $("sw").textContent=e[0];$("sm").textContent=e[1];$("se").textContent=e[2]+" — "+e[3];
+ var h="",sel=S.langs||[];
+ LG.forEach(function(L){if(sel.indexOf(L.k)<0)return;var i=(DN*L.m)%30;
+  if(L.k=="zh"){var z=ZH[i];h+=lw(L,z[0],z[1],z[2],z[3]+" "+z[4]+" — "+z[5])}
+  else if(L.k=="es"){var e=ES[i];h+=lw(L,e[0],"",e[1],e[2]+" — "+e[3])}
+  else{var p=LX[L.k][i].split("|");h+=lw(L,p[0],p[1]||"",EN30[i],"")}});
+ $("wlangs").innerHTML=h||'<div style="color:var(--mute)">No languages selected. Turn some on in ⚙️ → Words.</div>';
  var d=!!(S.learn||{})[dk(0)];$("lrn").textContent=d?"✓ LEARNED TODAY":"I LEARNED THESE WORDS (+15 XP)";$("lrn").className="btn px"+(d?" done":"")}
 $("lrn").addEventListener("click",function(){S.learn=S.learn||{};var k=dk(0);S.learn[k]=!S.learn[k];save();render();daily();if(S.learn[k])pop(this,"+15 XP")});
 daily();
@@ -475,7 +499,7 @@ $("dl").addEventListener("click",function(){var b=this;if(!DL){var bl=new Blob([
  DL.save({filename:"nostos-backup-"+dk(0)+".txt",data:code()}).then(function(){pop(b,"SAVED TO PHONE ✓")}).catch(function(e){pop(b,e&&e.code=="declined"?"CANCELLED":"FAILED")})});
 $("snow").addEventListener("click",function(){var ok=save();pop(this,ok?"SAVED ✓":"FAILED")});
 $("bk").addEventListener("click",function(){var t=$("bkt");t.value="NOSTOS:"+btoa(unescape(encodeURIComponent(JSON.stringify(S))));t.select();try{navigator.clipboard.writeText(t.value)}catch(e){}pop(this,"COPIED")});
-$("rs").addEventListener("click",function(){try{var v=$("bkt").value.trim().replace(/^NOSTOS:/,"");var o=JSON.parse(decodeURIComponent(escape(atob(v))));S=Object.assign(S,o);save();pop(this,"RESTORED");setTimeout(function(){location.reload()},600);return;$("lapS").value=S.lapS||"";$("lapT").value=S.lapT||"";$("earn").value=S.earn||"";$("why").value=S.why||"";$("jtxt").value=(S.log[dk(0)]||{}).text||"";pop(this,"RESTORED")}catch(e){pop(this,"BAD CODE")}});
+$("rs").addEventListener("click",function(){try{var o=parseBackup($("bkt").value);if(!o)throw 0;S=Object.assign(S,o);save();pop(this,"RESTORED");setTimeout(function(){location.reload()},600);return;$("lapS").value=S.lapS||"";$("lapT").value=S.lapT||"";$("earn").value=S.earn||"";$("why").value=S.why||"";$("jtxt").value=(S.log[dk(0)]||{}).text||"";pop(this,"RESTORED")}catch(e){pop(this,"BAD CODE")}});
 
 var CURT;function go(n){CURT=n;if(n==3&&$("cal")){CALP="";renderCal()}Array.prototype.forEach.call(document.querySelectorAll(".pg"),function(p){p.style.display=p.getAttribute("data-p")==n?"block":"none"});Array.prototype.forEach.call(document.querySelectorAll(".tab"),function(t){t.classList.toggle("on",t.getAttribute("data-t")==n)});window.scrollTo(0,0)}
 $("tabs").addEventListener("click",function(e){var b=e.target.closest("[data-t]");if(b)go(b.getAttribute("data-t"))});
@@ -505,11 +529,12 @@ function applyTheme(h){var r=document.documentElement.style;var MIG={"#b388ff":"
  if(CUR){try{localStorage.setItem("nostos:theme",h);var u=getUsers(),x=u.filter(function(y){return y.n==CUR})[0];if(x&&x.th!=h){x.th=h;putUsers(u)}}catch(e){}render()}}
 var V=null,STAB="acct";
 function showST(n){STAB=n;Array.prototype.forEach.call(document.querySelectorAll("#stabs [data-st]"),function(b){b.classList.toggle("on",b.getAttribute("data-st")==n)});Array.prototype.forEach.call(document.querySelectorAll(".sp"),function(p){p.classList.toggle("on",p.getAttribute("data-sp")==n)})}
-function buildNav(){$("tabs").innerHTML=S.cfg.tabs.map(function(i){return '<button class="tab" data-t="'+i+'"><span>'+TD[i][0]+'</span>'+TD[i][1]+'</button>'}).join("");if(CURT!=null)go(CURT)}
+function buildNav(){$("tabs").innerHTML=S.cfg.tabs.filter(function(i){return !(i==2&&S.wordsOn===false)}).map(function(i){return '<button class="tab" data-t="'+i+'"><span>'+TD[i][0]+'</span>'+TD[i][1]+'</button>'}).join("");if(CURT!=null)go(CURT)}
 function getUsers(){try{return JSON.parse(localStorage.getItem("nostos:users")||"[]")}catch(e){return []}}
 function putUsers(u){try{localStorage.setItem("nostos:users",JSON.stringify(u))}catch(e){}}
 function me(){return getUsers().filter(function(y){return y.n==CUR})[0]||{}}
-function setUI(){var x=me();
+function setW(){$("wtog").textContent=S.wordsOn===false?"📖 WORDS TAB: OFF":"📖 WORDS TAB: ON";$("lgrid").innerHTML=LG.map(function(L){return '<button class="chip'+((S.langs||[]).indexOf(L.k)>=0?' on':'')+'" data-lg="'+L.k+'">'+L.f+' '+L.n+'</button>'}).join("")}
+function setUI(){var x=me();setW();
  $("acct").textContent="Signed in as "+(CUR||"")+" · lock: "+(x.cred?"Fingerprint":x.pin?"PIN":"none");$("ver").textContent="App version "+VER;
  $("swatches").innerHTML=THEMES.map(function(t){return '<button class="vb'+(S.cfg.theme==t.h?' on':'')+'" data-c="'+t.h+'"><i style="background:linear-gradient(90deg,'+t.h+' 70%,'+t.c+' 70%)"></i><b>'+t.e+' '+t.n+'</b>'+t.t+'</button>'}).join("");$("tcol").value=S.cfg.theme;
  $("tabset").innerHTML=S.cfg.tabs.map(function(i,ix){return '<div class="srow"><span class="sl">'+TD[i][0]+' '+TD[i][1]+'</span><button data-tu="'+ix+'">↑</button><button data-td="'+ix+'">↓</button></div>'}).join("");
@@ -522,6 +547,8 @@ $("setmodal").addEventListener("click",function(e){var t=e.target,v;
  var g=function(a){var b=t.closest("["+a+"]");return b?+b.getAttribute(a):null};
  if(t===this){this.classList.remove("show");return}
  var st=t.closest("[data-st]");if(st){showST(st.getAttribute("data-st"));return}
+ if(t.closest("#wtog")){S.wordsOn=(S.wordsOn===false);save();buildNav();render();if(S.wordsOn===false&&String(CURT)=="2")go(String(S.cfg.tabs.filter(function(i){return i!=2})[0]));setW();return}
+ var lg=t.closest("[data-lg]");if(lg){var lk=lg.getAttribute("data-lg"),la=S.langs||(S.langs=[]),lx=la.indexOf(lk);if(lx<0)la.push(lk);else la.splice(lx,1);save();daily();setW();return}
  var c=t.closest("[data-c]");if(c){S.cfg.theme=c.getAttribute("data-c");applyTheme(S.cfg.theme);save();setUI();return}
  if((v=g("data-tu"))!=null){swap(S.cfg.tabs,v,v-1);save();buildNav();setUI();return}
  if((v=g("data-td"))!=null){swap(S.cfg.tabs,v,v+1);save();buildNav();setUI();return}
@@ -637,17 +664,19 @@ function renderCal(){var el=$("cal");if(!CALM){var n=new Date();CALM={y:n.getFul
 $("cal").addEventListener("click",function(e){var d=e.target.closest("[data-cd]"),m=e.target.closest("[data-cm]");
  if(d){var kd=d.getAttribute("data-cd");CALD=(CALD==kd)?"":kd;render();return}
  if(m){var n=CALM.m+ +m.getAttribute("data-cm");CALM={y:CALM.y+Math.floor(n/12),m:((n%12)+12)%12};CALP="";renderCal()}});
-function openG(first){var f=!!first;$("gh").textContent=f?"WHAT’S YOUR BIG GOAL?":"YOUR GOALS";$("gsub").textContent=f?"Pick the goal you’re chasing and a smaller first quest. You can change them any time.":"Change what this app tracks for you.";
+var GM=null;function openG(first,mode){var f=!!first;GM=mode||null;$("gs1").style.display=(GM=="g2")?"none":"block";$("gs2").style.display=(GM=="g1")?"none":"block";$("gh").textContent=f?"WHAT’S YOUR BIG GOAL?":"YOUR GOALS";$("gsub").textContent=f?"Pick the goal you’re chasing and a smaller first quest. You can change them any time.":"Change what this app tracks for you.";
  $("g1n").value=f?"":(S.g1n||"");$("g1t").value=f?"":(S.g1t||"");$("g1u").value=S.u1==null?"$":S.u1;
  $("g2n").value=f?"":(S.g2n||"");$("g2t").value=f?"":(S.lapT||"");$("g2u").value=S.u2==null?"$":S.u2;$("g1p").value=S.earn||"";$("g2p").value=S.lapS||"";
- $("gm").textContent="";$("gskip").style.display=f?"block":"none";$("gcl").style.display=f?"none":"block";$("gmodal").classList.add("show")}
+ $("gm").textContent="";$("gskip").style.display=f?"block":"none";$("gcl").style.display=f?"none":"block";if(GM){$("gh").textContent=GM=="g1"?"NEXT BIG GOAL":"NEXT QUEST";$("gsub").textContent="A fresh start. The one you finished stays in Achievements.";["g1n","g1t","g1p","g2n","g2t","g2p"].forEach(function(i){$(i).value=""});$("gskip").style.display="none";$("gcl").style.display="block"}$("gmodal").classList.add("show")}
 $("g1e").addEventListener("click",function(){openG(false)});$("g2e").addEventListener("click",function(){openG(false)});
 $("gcl").addEventListener("click",function(){$("gmodal").classList.remove("show")});
 $("gsave").addEventListener("click",function(){var n1=$("g1n").value.trim().slice(0,40),t1=parseFloat($("g1t").value),u1=$("g1u").value.trim().slice(0,8),n2=$("g2n").value.trim().slice(0,40),t2=parseFloat($("g2t").value),u2=$("g2u").value.trim().slice(0,8);
+ if(GM=="g1"){if(!n1){$("gm").textContent="Name your next goal.";return}if(!(t1>0)){$("gm").textContent="Set a target above 0.";return}var q1=parseFloat($("g1p").value);S.g1n=n1.toUpperCase();S.g1t=t1;S.u1=u1;S.earn=q1>0?q1:0;S.g1d=false;S.gset=true;save();$("gmodal").classList.remove("show");GM=null;applyTheme(S.cfg.theme);return}
+ if(GM=="g2"){if(!(t2>0)){$("gm").textContent="Set a target for your next quest.";return}var q2=parseFloat($("g2p").value);S.g2n=n2.toUpperCase();S.lapT=t2;S.u2=u2;S.lapS=q2>0?q2:0;S.g2d=false;S.gset=true;save();$("gmodal").classList.remove("show");GM=null;applyTheme(S.cfg.theme);return}
  if(!n1){$("gm").textContent="Name your big goal.";return}
  if(!(t1>0)){$("gm").textContent="Set a target above 0.";return}
  if(n2&&!(t2>0)){$("gm").textContent="Set a target for your first quest.";return}
- S.g1n=n1.toUpperCase();S.g1t=t1;S.u1=u1;S.g2n=n2.toUpperCase();if(t2>0)S.lapT=t2;else if(S.gset===false)S.lapT=100;S.u2=u2;var p1=parseFloat($("g1p").value),p2=parseFloat($("g2p").value);S.earn=p1>0?p1:0;S.lapS=p2>0?p2:0;S.gset=true;save();$("gmodal").classList.remove("show");applyTheme(S.cfg.theme)});
+ S.g1n=n1.toUpperCase();S.g1t=t1;S.u1=u1;S.g2n=n2.toUpperCase();if(t2>0)S.lapT=t2;else if(S.gset===false)S.lapT=100;S.u2=u2;var p1=parseFloat($("g1p").value),p2=parseFloat($("g2p").value);S.earn=p1>0?p1:0;S.lapS=p2>0?p2:0;if(S.earn<S.g1t)S.g1d=false;if(S.lapS<S.lapT)S.g2d=false;S.gset=true;save();$("gmodal").classList.remove("show");applyTheme(S.cfg.theme)});
 $("gskip").addEventListener("click",function(){$("gmodal").classList.remove("show")});
 if(CUR&&S.gset===false)setTimeout(function(){openG(true)},600);
 var AE=null;
@@ -662,12 +691,28 @@ $("asave").addEventListener("click",function(){var t=$("at").value.trim().slice(
  save();render();$("amodal").classList.remove("show")});
 $("adel").addEventListener("click",function(){var b=this;if(!b.getAttribute("data-s")){b.setAttribute("data-s","1");b.textContent="TAP AGAIN TO DELETE";return}
  b.removeAttribute("data-s");if(AE)S.ach=S.ach.filter(function(x){return x.id!=AE.id});save();render();$("amodal").classList.remove("show")});
+function checkDone(){var ch=false,td=dk(0);
+ if(S.gset!==false&&!S.g1d&&S.g1t>0&&S.earn>=S.g1t){S.g1d=true;S.ach.push({id:uid(),e:"🏆",t:S.g1n,d:td,n:"Big goal reached: "+fu(S.earn,S.u1)+" of "+fu(S.g1t,S.u1)});ch=true}
+ if(S.gset!==false&&!S.g2d&&S.lapT>0&&S.lapS>=S.lapT){S.g2d=true;S.ach.push({id:uid(),e:"✅",t:(S.g2n||(V?V.s:"FIRST QUEST")),d:td,n:"Quest completed: "+fu(S.lapS,S.u2)+" of "+fu(S.lapT,S.u2)});ch=true}
+ return ch}
+$("g1new").addEventListener("click",function(){openG(false,"g1")});$("g2new").addEventListener("click",function(){openG(false,"g2")});
+function parseBackup(t){try{t=String(t||"").trim();var o;if(t.charAt(0)=="{")o=JSON.parse(t);else{t=t.replace(/^NOSTOS:/i,"").replace(/\s+/g,"");o=JSON.parse(decodeURIComponent(escape(atob(t))))}if(!o||typeof o!="object"||Array.isArray(o))return null;if(Object.prototype.hasOwnProperty.call(o,"__proto__"))delete o["__proto__"];return o}catch(e){return null}}
+$("lpick").addEventListener("click",function(){$("lrestf").click()});
+$("lrestf").addEventListener("change",function(){var f=this.files&&this.files[0];if(!f)return;var r=new FileReader();r.onload=function(){$("lrest").value=String(r.result||"")};r.readAsText(f)});
+$("lrestb").addEventListener("click",function(){var n=$("lname").value.trim().slice(0,20),u=getUsers();
+ if(!n){lmsg("Type your username above first (the one from your old account).");return}
+ if(u.some(function(x){return x.n.toLowerCase()==n.toLowerCase()})){lmsg("That username is already on this phone. Log in, then use ⚙️ → Backup → Restore.");return}
+ var o=parseBackup($("lrest").value);if(!o){lmsg("Couldn’t read that backup. Paste the whole code, or pick the backup file.");return}
+ var fin=function(ent){if(!o.name)o.name=n.toUpperCase();try{localStorage.setItem(ukey(n),JSON.stringify(o))}catch(er){lmsg("Couldn’t save on this phone.");return}ent.n=n;u.push(ent);putUsers(u);enter(n)};
+ if(LK=="fp"){lmsg("Touch the fingerprint sensor…");mkFp(n).then(function(id){fin({cred:id})}).catch(function(){lmsg("Fingerprint isn’t available in this view. Choose PIN or NONE.")})}
+ else if(LK=="pin"){var p=$("lnewpin").value;if(!/^\d{4,8}$/.test(p)){lmsg("PIN must be 4–8 digits.");return}sha(n.toLowerCase()+":"+p).then(function(h){fin({pin:h})})}
+ else fin({})});
 function lmode(m){$("lview").style.display=m=="s"?"none":"block";$("sview").style.display=m=="s"?"block":"none";$("gosign").style.display=m=="s"?"none":"inline-block";$("goback").style.display=m=="s"?"inline-block":"none";lmsg("")}
 $("gosign").addEventListener("click",function(){lmode("s")});$("goback").addEventListener("click",function(){lmode("l")});
 function welcome(){var w=$("welc");w.innerHTML='<span>'+V.e+'</span><div>'+V.w+'<small>'+esc(S.name||CUR)+'</small></div>';w.className="vibe px show";setTimeout(function(){w.className="vibe px"},3800)}
 if(!CUR){lusers();mark();lmode(getUsers().length?"l":"s");$("login").classList.add("show")}
 else{var wf=null;try{wf=localStorage.getItem("nostos:wel");localStorage.removeItem("nostos:wel")}catch(e){}if(wf)welcome()}
-buildNav();go(String(S.cfg.tabs[0]));
+buildNav();go(String(S.cfg.tabs.filter(function(i){return !(i==2&&S.wordsOn===false)})[0]));
 
 </script>
 </body>
