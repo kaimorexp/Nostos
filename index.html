@@ -231,6 +231,7 @@ button.badge{font:700 12px Rajdhani,sans-serif;color:var(--white)}.badge small{d
 <div class="card"><h2 class="px">WORD OF THE DAY</h2>
  <div class="vs"><div class="vt" id="vt"></div><div class="vr px" id="vr"></div></div>
  <div id="wlangs"></div>
+ <button class="btn px w" id="wset">🌍 CHOOSE LANGUAGES</button>
  <button class="btn px gold" id="lrn"></button></div>
 </div>
 
@@ -380,7 +381,7 @@ if(!S.ach)S.ach=[];
 S.ach=S.ach.filter(function(a){var o={a1:"$8.6K Payouts",a2:"Moved Out",a3:"Gym Habit",a4:"2018 Goals"};return o[a.id]!==a.t});
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 var FN={d:"DAILY",w:"WEEKLY",m:"MONTHLY",y:"YEARLY"},SN={a:"ACTIVE",p:"PAUSED",x:"ARCHIVED"},VIEW="a",ED=null,EF="d",ES="a";
-var VER="2.8 · goals complete, 14 languages, words toggle, restore";
+var VER="2.9 · goals complete, 14 languages (button on Words page), words toggle, restore";
 var CALM=null,CALD="",CALP="";
 var MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
 var CATS=["Faith","Body","Mind","Money","Life"];
@@ -707,6 +708,7 @@ $("lrestb").addEventListener("click",function(){var n=$("lname").value.trim().sl
  if(LK=="fp"){lmsg("Touch the fingerprint sensor…");mkFp(n).then(function(id){fin({cred:id})}).catch(function(){lmsg("Fingerprint isn’t available in this view. Choose PIN or NONE.")})}
  else if(LK=="pin"){var p=$("lnewpin").value;if(!/^\d{4,8}$/.test(p)){lmsg("PIN must be 4–8 digits.");return}sha(n.toLowerCase()+":"+p).then(function(h){fin({pin:h})})}
  else fin({})});
+$("wset").addEventListener("click",function(){setUI();showST("words");$("setmodal").classList.add("show")});
 function lmode(m){$("lview").style.display=m=="s"?"none":"block";$("sview").style.display=m=="s"?"block":"none";$("gosign").style.display=m=="s"?"none":"inline-block";$("goback").style.display=m=="s"?"inline-block":"none";lmsg("")}
 $("gosign").addEventListener("click",function(){lmode("s")});$("goback").addEventListener("click",function(){lmode("l")});
 function welcome(){var w=$("welc");w.innerHTML='<span>'+V.e+'</span><div>'+V.w+'<small>'+esc(S.name||CUR)+'</small></div>';w.className="vibe px show";setTimeout(function(){w.className="vibe px"},3800)}
