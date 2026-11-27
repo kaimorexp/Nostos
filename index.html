@@ -228,6 +228,10 @@ button.badge{font:700 12px Rajdhani,sans-serif;color:var(--white)}.badge small{d
  <div class="two"><label>Saved so far<input id="lapS" type="number" inputmode="decimal"></label>
  <label>Target<input id="lapT" type="number" inputmode="decimal"></label></div>
  <button class="chip" id="g2e" style="margin-top:12px">✎ EDIT GOALS</button></div>
+<div class="card"><h2 class="px">MORE QUESTS</h2>
+ <div class="mtm">Any objective counts: get funded, pass an exam, run 5 km. It doesn’t have to be about money.</div>
+ <div id="qlist"></div>
+ <button class="btn px gold" id="qadd">＋ ADD QUEST</button></div>
 <div class="card"><h2 class="px">VOYAGE PROGRESS · 14 DAYS</h2>
  <div class="chart" id="chart"></div>
  <div class="stats"><div class="stat"><b id="pAct"></b><span>active days</span></div>
@@ -361,6 +365,20 @@ button.badge{font:700 12px Rajdhani,sans-serif;color:var(--white)}.badge small{d
  <div class="stats"><div class="stat"><b id="skb">0</b><span>best streak</span></div><div class="stat"><b id="skl">0</b><span>days logged</span></div></div>
  <div class="mtm" id="skh" style="margin-top:14px"></div>
  <button class="btn px" id="skc">CLOSE</button></div></div>
+<div class="modal" id="qmodal"><div class="card">
+ <h2 class="px" id="qh"></h2>
+ <label>What’s the objective?<input id="qt" maxlength="60" placeholder="e.g. Get funded, Pass my exam"></label>
+ <label style="margin-top:10px">Emoji<input id="qe" maxlength="4"></label>
+ <div class="mtm" style="margin-top:12px">How do you track it?</div>
+ <div class="chips" id="qty"><button class="chip" data-qt="n">🔢 NUMBER</button><button class="chip" data-qt="s">☑️ STEPS</button><button class="chip" data-qt="y">✅ YES / NO</button></div>
+ <div id="qn"><div class="two"><label>Target<input id="qtg" type="number" inputmode="decimal" min="1" placeholder="10"></label><label>Unit (optional)<input id="qu" maxlength="8" placeholder="km, books, $…"></label></div>
+  <label style="margin-top:10px">Progress so far<input id="qp" type="number" inputmode="decimal" min="0"></label></div>
+ <div id="qsx"><label>Steps (one per line)<textarea id="qsteps" rows="5" placeholder="Pass the challenge&#10;Verify identity&#10;Get funded"></textarea></label></div>
+ <div id="qyn"><div class="mtm">You’ll tap “Mark as done” when you’ve achieved it.</div></div>
+ <div id="qm" style="color:var(--gold);min-height:22px;margin-top:8px"></div>
+ <button class="btn px" id="qsave">SAVE</button>
+ <button class="btn px w" id="qdel">🗑 DELETE</button>
+ <button class="btn px w" id="qcl">CLOSE</button></div></div>
 <datalist id="catl"></datalist>
 <div class="modal" id="edmodal"><div class="card" id="edcard">
  <h2 class="px" id="edh"></h2>
@@ -408,12 +426,12 @@ var Q=S.cfg.tasks;S.mt=S.mt||[];S.pc=S.pc||{};S.goals=S.goals||[];S.xpb=S.xpb||0
 if(S.gset===undefined&&(!S.g1t||(S.g1t===50000&&S.g1n==="50K IN 2019 EC"))){S.gset=false;S.g1n="MY BIG GOAL";S.g1t=1000}
 S.g1n=S.g1n||"MY BIG GOAL";S.g1t=S.g1t||1000;
 if(S.u1==null)S.u1="$";if(S.u2==null)S.u2="$";S.g2n=S.g2n||"";
-S.langs=S.langs||["zh","es"];if(S.wordsOn==null)S.wordsOn=true;S.g1d=!!S.g1d;S.g2d=!!S.g2d;
+S.qs=S.qs||[];S.langs=S.langs||["zh","es"];if(S.wordsOn==null)S.wordsOn=true;S.g1d=!!S.g1d;S.g2d=!!S.g2d;
 if(!S.ach)S.ach=[];
 S.ach=S.ach.filter(function(a){var o={a1:"$8.6K Payouts",a2:"Moved Out",a3:"Gym Habit",a4:"2018 Goals"};return o[a.id]!==a.t});
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
 var FN={d:"DAILY",w:"WEEKLY",m:"MONTHLY",y:"YEARLY"},SN={a:"ACTIVE",p:"PAUSED",x:"ARCHIVED"},VIEW="a",ED=null,EF="d",ES="a";
-var VER="3.0 · Duolingo-style top bar, new logo, language progress";
+var VER="3.1 · more quests (number / steps / yes-no), Duolingo-style top bar";
 var CALM=null,CALD="",CALP="";
 var MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
 var CATS=["Faith","Body","Mind","Money","Life"];
@@ -462,7 +480,7 @@ function render(){if(S.ach&&checkDone())save();
  var ks=(CALD&&S.log[CALD])?[CALD]:[],h="";renderCal();
  ks.forEach(function(k){var e=S.log[k],it=e.items||[{t:"",text:e.text,mood:e.mood,imgs:e.imgs||[]}];
   for(var n=it.length-1;n>=0;n--){var x=it[n];h+='<div class="entry"><div class="h px"><span>'+k+(x.t?' · '+x.t:'')+'</span><span style="font-size:14px">'+(x.mood?MO[x.mood-1]:'')+'</span><span class="sp"></span><span>'+cnt(k)+'/'+QL().length+'</span><button data-del="'+k+'" data-di="'+n+'">✕</button></div><p>'+esc(x.text)+'</p>'+((x.imgs&&x.imgs.length)?'<div class="imgs" data-ids="'+x.imgs.join(",")+'"></div>':'')+'</div>'}});
- $("entries").innerHTML=h||(CALD?'<div style="color:var(--mute)">No entry on '+CALD+'.</div>':(Object.keys(S.log).length?'<div style="color:var(--mute)">Tap a highlighted day to read that day’s log.</div>':'<div style="color:var(--mute)">No entries yet. Your first log starts the story.</div>'));fillImgs();renderMine();renderAch();
+ $("entries").innerHTML=h||(CALD?'<div style="color:var(--mute)">No entry on '+CALD+'.</div>':(Object.keys(S.log).length?'<div style="color:var(--mute)">Tap a highlighted day to read that day’s log.</div>':'<div style="color:var(--mute)">No entries yet. Your first log starts the story.</div>'));fillImgs();renderMine();renderAch();renderQs();
 }
 function pop(el,txt){var p=document.createElement("div");p.className="pop";p.textContent=txt;var r=el.getBoundingClientRect();p.style.left=(r.left+r.width/2-40)+"px";p.style.top=r.top+"px";document.body.appendChild(p);setTimeout(function(){p.remove()},900)}
 $("quests").addEventListener("click",function(e){var b=e.target.closest("[data-q]");if(!b)return;var h=b.getAttribute("data-q"),k=dk(0);
@@ -731,6 +749,7 @@ $("adel").addEventListener("click",function(){var b=this;if(!b.getAttribute("dat
 function checkDone(){var ch=false,td=dk(0);
  if(S.gset!==false&&!S.g1d&&S.g1t>0&&S.earn>=S.g1t){S.g1d=true;S.ach.push({id:uid(),e:"🏆",t:S.g1n,d:td,n:"Big goal reached: "+fu(S.earn,S.u1)+" of "+fu(S.g1t,S.u1)});ch=true}
  if(S.gset!==false&&!S.g2d&&S.lapT>0&&S.lapS>=S.lapT){S.g2d=true;S.ach.push({id:uid(),e:"✅",t:(S.g2n||(V?V.s:"FIRST QUEST")),d:td,n:"Quest completed: "+fu(S.lapS,S.u2)+" of "+fu(S.lapT,S.u2)});ch=true}
+ S.qs.forEach(function(q){if(!q.done&&qdone(q)){q.done=true;S.ach.push({id:uid(),e:q.e||"🎯",t:q.t,d:td,n:"Quest completed"+(q.ty=="s"?": "+q.st.length+" of "+q.st.length+" steps":q.ty=="n"?": "+fu(q.p,q.u)+" of "+fu(q.tg,q.u):"")});ch=true}});
  return ch}
 $("g1new").addEventListener("click",function(){openG(false,"g1")});$("g2new").addEventListener("click",function(){openG(false,"g2")});
 function parseBackup(t){try{t=String(t||"").trim();var o;if(t.charAt(0)=="{")o=JSON.parse(t);else{t=t.replace(/^NOSTOS:/i,"").replace(/\s+/g,"");o=JSON.parse(decodeURIComponent(escape(atob(t))))}if(!o||typeof o!="object"||Array.isArray(o))return null;if(Object.prototype.hasOwnProperty.call(o,"__proto__"))delete o["__proto__"];return o}catch(e){return null}}
@@ -757,6 +776,36 @@ function openSK(){var n=streak();$("skn").textContent=n;$("skb").textContent=bes
  $("skh").textContent=good(dk(0))?"You’re safe for today. Come back tomorrow to keep it going!":"Finish 5 tasks or write in your Captain’s Log today to keep your streak alive.";$("skmodal").classList.add("show")}
 $("hstk").addEventListener("click",openSK);$("skc").addEventListener("click",function(){$("skmodal").classList.remove("show")});
 $("skmodal").addEventListener("click",function(e){if(e.target===this)this.classList.remove("show")});
+var QE=null,QT="n";
+function qdone(q){if(q.ty=="s")return !!(q.st&&q.st.length&&q.st.every(function(x){return x.d}));if(q.ty=="y")return !!q.yd;return q.tg>0&&q.p>=q.tg}
+function renderQs(){var A=S.qs.filter(function(q){return !q.done}),D=S.qs.length-A.length;
+ $("qlist").innerHTML=(A.map(function(q){var h='<div class="entry"><div class="h px"><span>'+esc(q.e||"🎯")+" "+esc(q.t)+'</span><span class="sp"></span><button data-qe="'+q.id+'">⋯</button></div>';
+  if(q.ty=="s"){var dn=q.st.filter(function(x){return x.d}).length;h+='<div class="gm">'+dn+" of "+q.st.length+' steps</div><div class="bar"><i style="width:'+(q.st.length?dn/q.st.length*100:0)+'%"></i></div><div style="margin-top:10px">'+q.st.map(function(x,i){return '<button class="quest'+(x.d?" on":"")+'" data-qs="'+q.id+"|"+i+'" style="margin-bottom:8px"><div class="ic">'+(x.d?"✅":"⬜")+'</div><div class="t">'+esc(x.t)+'</div><div class="ck">'+(x.d?"✓":"")+"</div></button>"}).join("")+"</div>"}
+  else if(q.ty=="y"){h+='<button class="btn px gold" data-qy="'+q.id+'">MARK AS DONE</button>'}
+  else{h+='<div class="gm">'+fu(q.p,q.u)+" / "+fu(q.tg,q.u)+'</div><div class="bar"><i style="width:'+pct(q.p,q.tg)+'%"></i></div><label style="margin-top:10px">Progress so far<input type="number" inputmode="decimal" min="0" data-qp="'+q.id+'" value="'+q.p+'"></label>'}
+  return h+"</div>"}).join("")||'<div style="color:var(--mute)">No active quests yet. Add one, like “Get funded” or “Pass my exam”.</div>')+(D?'<div class="mtm" style="margin-top:10px">'+D+" finished quest"+(D==1?"":"s")+" saved in Achievements 🏆</div>":"")}
+function qfind(id){return S.qs.filter(function(x){return x.id==id})[0]}
+$("qlist").addEventListener("click",function(e){var m=e.target.closest("[data-qe]"),st=e.target.closest("[data-qs]"),y=e.target.closest("[data-qy]");
+ if(m){openQ(m.getAttribute("data-qe"));return}
+ if(st){var a=st.getAttribute("data-qs").split("|"),q=qfind(a[0]);if(q&&q.st[+a[1]]){q.st[+a[1]].d=!q.st[+a[1]].d;var fin=qdone(q);save();render();if(fin)pop($("qlist"),"QUEST COMPLETE!")}return}
+ if(y){var q2=qfind(y.getAttribute("data-qy"));if(q2){q2.yd=true;save();render();pop($("qlist"),"QUEST COMPLETE!")}}});
+$("qlist").addEventListener("change",function(e){var i=e.target.closest("[data-qp]");if(!i)return;var q=qfind(i.getAttribute("data-qp"));if(!q)return;var v=parseFloat(i.value);q.p=v>0?v:0;var fin=qdone(q);save();render();if(fin)pop($("qlist"),"QUEST COMPLETE!")});
+function qMark(){Array.prototype.forEach.call(document.querySelectorAll("#qty [data-qt]"),function(b){b.classList.toggle("on",b.getAttribute("data-qt")==QT)});$("qn").style.display=QT=="n"?"block":"none";$("qsx").style.display=QT=="s"?"block":"none";$("qyn").style.display=QT=="y"?"block":"none"}
+function openQ(id){var q=qfind(id)||null;QE=q;QT=q?q.ty:"n";$("qh").textContent=q?"EDIT QUEST":"NEW QUEST";$("qt").value=q?q.t:"";$("qe").value=q?(q.e||"🎯"):"🎯";
+ $("qtg").value=q&&q.ty=="n"?q.tg:"";$("qu").value=q&&q.ty=="n"?q.u:"";$("qp").value=q&&q.ty=="n"?q.p:"";$("qsteps").value=q&&q.st?q.st.map(function(x){return x.t}).join("\n"):"";
+ $("qdel").style.display=q?"block":"none";$("qdel").removeAttribute("data-s");$("qdel").textContent="🗑 DELETE";$("qm").textContent="";qMark();$("qmodal").classList.add("show")}
+$("qadd").addEventListener("click",function(){openQ()});
+$("qty").addEventListener("click",function(e){var b=e.target.closest("[data-qt]");if(b){QT=b.getAttribute("data-qt");qMark()}});
+$("qcl").addEventListener("click",function(){$("qmodal").classList.remove("show")});
+$("qsave").addEventListener("click",function(){var t=$("qt").value.trim().slice(0,60);if(!t){$("qm").textContent="Name your quest.";return}
+ var v={t:t,e:$("qe").value.trim().slice(0,4)||"🎯",ty:QT};
+ if(QT=="n"){var tg=parseFloat($("qtg").value),p=parseFloat($("qp").value);if(!(tg>0)){$("qm").textContent="Set a target above 0.";return}v.tg=tg;v.u=$("qu").value.trim().slice(0,8);v.p=p>0?p:0}
+ else if(QT=="s"){var ln=$("qsteps").value.split("\n").map(function(x){return x.trim().slice(0,60)}).filter(Boolean).slice(0,20);if(!ln.length){$("qm").textContent="Add at least one step (one per line).";return}
+  var od={};(QE&&QE.st||[]).forEach(function(x){od[x.t]=x.d});v.st=ln.map(function(x){return {t:x,d:!!od[x]}})}
+ if(QE)Object.assign(QE,v);else S.qs.push(Object.assign({id:uid(),done:false},v));
+ save();render();$("qmodal").classList.remove("show")});
+$("qdel").addEventListener("click",function(){var b=this;if(!b.getAttribute("data-s")){b.setAttribute("data-s","1");b.textContent="TAP AGAIN TO DELETE";return}
+ b.removeAttribute("data-s");if(QE)S.qs=S.qs.filter(function(x){return x.id!=QE.id});save();render();$("qmodal").classList.remove("show")});
 function lmode(m){$("lview").style.display=m=="s"?"none":"block";$("sview").style.display=m=="s"?"block":"none";$("gosign").style.display=m=="s"?"none":"inline-block";$("goback").style.display=m=="s"?"inline-block":"none";lmsg("")}
 $("gosign").addEventListener("click",function(){lmode("s")});$("goback").addEventListener("click",function(){lmode("l")});
 function welcome(){var w=$("welc");w.innerHTML='<span>'+V.e+'</span><div>'+V.w+'<small>'+esc(S.name||CUR)+'</small></div>';w.className="vibe px show";setTimeout(function(){w.className="vibe px"},3800)}
